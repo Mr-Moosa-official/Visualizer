@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Zap, CheckCircle, XCircle, History } from 'lucide-react';
+import { Settings, Zap, CheckCircle, XCircle, History, KeyRound } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 
@@ -32,6 +32,9 @@ export default function VisualizerDashboard() {
   const [allowedCount, setAllowedCount] = useState(0);
   const [blockedCount, setBlockedCount] = useState(0);
   const [, setTick] = useState(0);
+  const [apiKey, setApiKey] = useState('');
+  const [apiKeyStatus, setApiKeyStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
+  const VALID_API_KEY = 'fs-studio-demo-key';
 
   const form = useForm<LimitFormValues>({
     resolver: zodResolver(limitSchema),
@@ -82,6 +85,23 @@ export default function VisualizerDashboard() {
       setRequests(r => [...r, now]);
     }
   }, [requests, limits]);
+
+  const handleTestApiKey = useCallback(() => {
+    if (apiKey === VALID_API_KEY) {
+      setApiKeyStatus('valid');
+      toast({
+        title: 'API Key Valid',
+        description: 'This is a valid API key.',
+      });
+    } else {
+      setApiKeyStatus('invalid');
+      toast({
+        variant: 'destructive',
+        title: 'API Key Invalid',
+        description: 'This is not a valid API key.',
+      });
+    }
+  }, [apiKey, toast]);
 
   const requestsInLastMinute = useMemo(() => {
     const now = new Date();
@@ -180,6 +200,55 @@ export default function VisualizerDashboard() {
               </div>
               <p className="text-xs text-muted-foreground text-right mt-1">{requestsInLastMinute.length} / {limits.minute} requests</p>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card/80 backdrop-blur-sm">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <KeyRound className="w-6 h-6 text-primary" />
+              <CardTitle>API Key Tester</CardTitle>
+            </div>
+            <CardDescription>
+              Simulate validating an API key. Use `fs-studio-demo-key` to test.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex space-x-2">
+              <Input
+                placeholder="Enter API Key"
+                value={apiKey}
+                onChange={(e) => {
+                  setApiKey(e.target.value);
+                  if (apiKeyStatus !== 'idle') {
+                    setApiKeyStatus('idle');
+                  }
+                }}
+              />
+              <Button onClick={handleTestApiKey}>Test Key</Button>
+            </div>
+            {apiKeyStatus !== 'idle' && (
+              <div
+                className={`flex items-center gap-2 p-3 rounded-md animate-fade-in ${
+                  apiKeyStatus === 'valid' ? 'bg-primary/10' : 'bg-destructive/10'
+                }`}
+              >
+                {apiKeyStatus === 'valid' ? (
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                ) : (
+                  <XCircle className="w-5 h-5 text-destructive" />
+                )}
+                <p
+                  className={`text-sm font-medium ${
+                    apiKeyStatus === 'valid' ? 'text-primary' : 'text-destructive'
+                  }`}
+                >
+                  {apiKeyStatus === 'valid'
+                    ? 'API Key is Valid'
+                    : 'API Key is Invalid'}
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
