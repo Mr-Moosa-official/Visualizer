@@ -1,6 +1,6 @@
 # 📊 Visualizer – API Rate Limit Monitoring & Testing Dashboard
 
-Visualizer is  an interactive API rate limit configuration and monitoring dashboard that helps developers configure, test, and visualize API request limits in real time. It provides a clear, intuitive way to understand how rate limiting behaves under different traffic conditions.
+Visualizer is an interactive API rate limit configuration and monitoring dashboard that helps developers configure, test, and visualize API request limits in real time. It provides a clear, intuitive way to understand how rate limiting behaves under different traffic conditions.
 
 This tool is ideal for backend developers, API designers, and DevOps teams who want better visibility and control over request throttling.
 
