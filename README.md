@@ -11,7 +11,7 @@ Visualizer allows users to:
 Configure API request limits
 
 Simulate incoming API traffic
-
+ 
 Monitor allowed and blocked requests in real time
 
 Visually track rate limit usage through dynamic meters
